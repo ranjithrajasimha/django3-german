@@ -1,0 +1,30 @@
+{% extends "german/base.html" %}
+
+{% block content %}
+<head>
+<h2>words</h2>
+</head>
+<style>
+    e { 
+        color: darkgreen;
+        font-size: larger;
+     }
+    g { color: darkblue; 
+        font-size: larger;
+    }
+</style>
+
+<br>
+<br>
+<br>
+<body>
+{% for noun in nouns %}
+    <blockquote>
+    <g>{{ noun.artikel }}
+    {{ noun.name }}</g>
+    <e> : {{ noun.meaning }}</e>
+    </blockquote>
+{% endfor %}
+</body>
+
+{% endblock %}

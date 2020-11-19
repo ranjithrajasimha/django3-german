@@ -1,0 +1,45 @@
+{% extends "german/base.html" %}
+
+{% block content %}
+<head>
+    <h2>Artikel quiz</h2>
+</head>
+<style>
+    e { 
+        color: darkgreen;
+        }
+    g { color: darkblue; 
+    }
+</style>
+    
+<br>
+<br>
+<br>
+<body>
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        what is the artikel of
+        <g>{{ noun.name }}</g>
+        <e>({{ noun.meaning }})</e>?
+        <form method="POST">
+            {% csrf_token %}
+            <!-- <button type="submit" class="btn btn-primary">Der</button>
+            <button type="submit" class="btn btn-warning">Die</button>
+            <button type="submit" class="btn btn-dark">Das</button> -->
+            <input type="text" name="artikel" class="form-control" id="artikel">
+            <input type="hidden" name ="answer" class="form-control" id="answer" value="{{ noun.artikel }}">
+            <input type="hidden" name ="nounname" class="form-control" id="nounname" value="{{ noun.name }}">
+            <button type="submit" class="btn btn-dark">submit</button>
+        </form>
+        <br>
+        <e>{{ msg }}</e>
+        <span style="padding-left: 150px;"> score: {{ score }}</span>
+    </div>
+</div>
+
+</body>
+
+
+
+
+{% endblock %}
