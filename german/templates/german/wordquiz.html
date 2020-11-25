@@ -1,0 +1,46 @@
+{% extends "german/base.html" %}
+
+{% block content %}
+<head>
+    <div class="row justify-content-center mt-5">
+    <h2>word quiz</h2>
+    </div>
+</head>
+<style>
+    e { 
+        color: darkgreen;
+        }
+    g { color: darkblue; 
+    }
+</style>
+    
+<br>
+<br>
+<br>
+
+<body>
+what is the meaning of {{ qnoun.name }}?
+<form method="POST">
+    {% csrf_token %}
+    <input type="radio" id="n1" name="selected_option" value="{{ noun1.meaning }}">
+    <label for="n1">{{ noun1.meaning }}</label><br>
+    <input type="radio" id="n2" name="selected_option" value="{{ noun2.meaning }}">
+    <label for="n2">{{ noun2.meaning }}</label><br>
+    <input type="radio" id="n3" name="selected_option" value="{{ noun3.meaning }}">
+    <label for="n3">{{ noun3.meaning }}</label><br>
+    <input type="radio" id="n4" name="selected_option" value="{{ noun4.meaning }}">
+    <label for="n4">{{ noun4.meaning }}</label><br>
+    <input type="hidden" id="qstn" name="qstn" value="{{ qnoun.name }}">
+    <input type="hidden" id="ans" name="ans" value="{{ qnoun.meaning }}">
+    <br>
+    <button type="submit">submit</button>
+</form>
+<br>
+{{ result }}
+
+</body>
+
+
+
+
+{% endblock %}

@@ -2,7 +2,9 @@
 
 {% block content %}
 <head>
-<h2>words</h2>
+    <div class="row justify-content-center mt-5">
+    <h2>Dictionary</h2>
+    </div>
 </head>
 <style>
     e { 
@@ -17,14 +19,20 @@
 <br>
 <br>
 <br>
+
 <body>
+
+<div class="card-columns">
 {% for noun in nouns %}
-    <blockquote>
+    <div class="card" style="border-width: 0px;">
     <g>{{ noun.artikel }}
     {{ noun.name }}</g>
     <e> : {{ noun.meaning }}</e>
-    </blockquote>
+    </div>
 {% endfor %}
+</div>
+
+
 </body>
 
 {% endblock %}

@@ -2,6 +2,20 @@
 
 {% block content %}
 
-welcome to the home page!
+{% load static %}
+<style>
+    h3 {text-align: center;}
+    .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 50%;
+            }
+</style>
+
+<br>
+<h3>welcome to the home page!</h3><br>
+<img src="{% static 'german/ranjith.jpeg' %}" class="center">
+
 
 {% endblock %}

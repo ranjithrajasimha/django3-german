@@ -10,22 +10,22 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="{% static "german/custom.css" %}">
+  <link rel="stylesheet" href="{% static 'german/custom.css' %}">
 
   <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
 
-  <link rel="icon" type="image/png" href="{% static "german/Logo.png" %}">
+  <link rel="icon" type="image/png" href="{% static "german/Logo.jpg" %}">
 
   <title>German</title>
 </head>
 
 <body>
 
-  <nav id="topNav" class="navbar navbar-expand-md navbar-light bg-primary">
+  <nav id="topNav" class="navbar navbar-expand-md navbar-light" style="background-color:indianred">
     <div class="container">
       <a class="navbar-brand" href="{% url 'home' %}">
-        <img src="{% static "german/Logo.png" %}" width="30" height="30" class="d-inline-block align-top" alt="Nick's Logo">
-        <span>Learn german</span>
+        <img src="{% static "german/Logo.jpg" %}" width="30" height="30" class="d-inline-block align-top" alt="Logo">
+        <span style="font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">Learn german</span>
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -33,11 +33,56 @@
       <div class="collapse navbar-collapse text-center" id="navbarNav">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'dictionary' %}" target="_blank">Dictionary</a>
+            <div class="dropdown">
+              <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" style="background-color: indianred;color: black;">
+                Blogs
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="{% url 'germanblogs' %}" target="_self" style="font-size: smaller;">View</a>
+                <a class="dropdown-item" href="{% url 'createblog' %}" target="_self" style="font-size: smaller;">Create</a>
+                <!-- <a class="dropdown-item" href="#">Link 3</a> -->
+              </div>
+            </div>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'artikelquiz' %}" target="_blank">Artikel quiz</a>
+            <a class="nav-link" href="{% url 'dictionary' %}" target="_self" style="font-size: medium;">Dictionary</a>
           </li>
+          <li class="nav-item">
+            <div class="dropdown">
+              <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" style="background-color: indianred;color: black;">
+                Quiz
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="{% url 'artikelquiz' %}" target="_self" style="font-size: smaller;">Artikel quiz</a>
+                <a class="dropdown-item" href="{% url 'wordquiz' %}" target="_self" style="font-size: smaller;">Word quiz</a>
+                <!-- <a class="dropdown-item" href="#">Link 3</a> -->
+              </div>
+            </div>
+            <!-- <a class="nav-link" href="{% url 'artikelquiz' %}" target="_self">Artikel quiz</a> -->
+          </li>
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <div class="dropdown">
+                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" style="background-color: indianred;">
+                  {% if user.username == "ranjithrajasimha" %}
+                  <img src="{% static 'german/ranjith.jpeg' %}" width="30" height="30" class="d-inline-block align-top" alt="{{ user.username }}">
+                  {% elif user.username == "rinee" %}
+                  <img src="{% static 'german/rinee-shirke.jpeg' %}" width="30" height="30" class="d-inline-block align-top" alt="{{ user.username }}">
+                  {% endif %}
+                </button>
+              <div class="dropdown-menu">
+                <a href="#" onclick="$('#signOutBtn').click()" class="dropdown-item" style="font-size:medium;">Logout</a>
+                <form style='display:none;' method="POST" action="{% url 'logoutuser' %}">
+                    {% csrf_token %}
+                    <button id="signOutBtn" type="submit">Logout</button>
+                </form>
+              </div>
+            </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'loginpage' %}" style="font-size:medium;">Login</a>
+          </li>
+          {% endif %}
         </ul>
       </div>
     </div>

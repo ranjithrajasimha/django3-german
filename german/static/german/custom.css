@@ -22,3 +22,6 @@ body {
         font-size: 5rem;
     }
 }
+
+#topNav { font-size: xx-small; }
+/* button.dropdown-toggle {font-size: xx-small;} */

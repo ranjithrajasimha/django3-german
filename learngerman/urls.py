@@ -22,4 +22,16 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('dictionary/', views.dictionary, name='dictionary'),
     path('aquiz/', views.artikelquiz, name='artikelquiz'),
+    path('wquiz/', views.wordquiz, name='wordquiz'),
+
+
+    path('germanblogs/', views.germanblogs, name='germanblogs'),
+    path('createblog/', views.createblog, name='createblog'),
+    path('<int:blog_id>/', views.detailblog, name='detailblog'),
+    path('blog/<int:blog_id>/edit', views.editblog, name='editblog'),
+    path('blog/<int:blog_id>/delete', views.deleteblog, name='deleteblog'),
+
+    path('login', views.loginpage, name='loginpage'),
+    path('logout', views.logoutuser, name='logoutuser'),
+
 ]

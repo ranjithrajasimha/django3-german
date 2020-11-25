@@ -1,5 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 import random
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login, logout, authenticate
+from .models import Blog
+from .forms import BlogForm
 
 txt_path = '/home/qxw8310/ranjith/udemy/web_development/learngerman-project/german/static/german/dictionary.txt'
 qstns_cnt = 0
@@ -28,7 +33,7 @@ def artikelquiz(request):
         ans_cnt = 0
         nouns = readtxt(txt_path)
         noun = random.choice(nouns)
-        return render(request, 'german/artikelquiz.html', {'noun':noun})
+        return render(request, 'german/artikelquiz.html', {'noun':noun, 'score': f'{ans_cnt}/{qstns_cnt}'})
     else:
         qstns_cnt += 1
         nouns = readtxt(txt_path)
@@ -41,6 +46,27 @@ def artikelquiz(request):
             return render(request, 'german/artikelquiz.html', {'noun':noun, 'msg': f'Correct! {artikel} {name}', 'score': f'{ans_cnt}/{qstns_cnt}'})
         else:
             return render(request, 'german/artikelquiz.html', {'noun':noun, 'msg': f'Wrong!   {artikel} {name}', 'score': f'{ans_cnt}/{qstns_cnt}'})
+
+
+
+def wordquiz(request):
+    all_nouns = readtxt(txt_path)
+    four_nouns = []
+    for _ in range(4):
+        four_nouns.append(random.choice(all_nouns))
+    q_noun = four_nouns[0]
+    random.shuffle(four_nouns)
+    if request.method == "GET":
+        return render(request, 'german/wordquiz.html', {'noun1':four_nouns[0], 'noun2':four_nouns[1], 'noun3':four_nouns[2], 'noun4':four_nouns[3], 'qnoun':q_noun})   
+    else:
+        qstn = request.POST['qstn']
+        ans = request.POST['ans']
+        if request.POST['ans'] == request.POST['selected_option']:
+            return render(request, 'german/wordquiz.html', {'result': f'correct! {qstn} : {ans}' , 'noun1':four_nouns[0], 'noun2':four_nouns[1], 'noun3':four_nouns[2], 'noun4':four_nouns[3], 'qnoun':q_noun})
+        else:
+            return render(request, 'german/wordquiz.html', {'result': f'wrong! {qstn} : {ans}' , 'noun1':four_nouns[0], 'noun2':four_nouns[1], 'noun3':four_nouns[2], 'noun4':four_nouns[3], 'qnoun':q_noun})
+
+
 
 def readtxt(path):
     with open(path) as f:
@@ -56,6 +82,58 @@ def readtxt(path):
             w.artikel = line[2].lower()
             nouns.append(w)
     return nouns
+
+def germanblogs(request):
+    blogs = Blog.objects.order_by('-date')
+    return render(request, 'german/germanblogs.html', {'blogs':blogs})
+
+def detailblog(request, blog_id):
+    blog = get_object_or_404(Blog, pk=blog_id)
+    return render(request, 'german/detailblog.html', {'blog':blog})
+
+@login_required
+def createblog(request):
+    if request.method == "GET":
+        return render(request, 'german/createblog.html', {'form': BlogForm()})
+    else:
+        try:
+            form = BlogForm(request.POST)
+            newblog = form.save(commit=False)
+            newblog.user = request.user
+            newblog.save()
+            return redirect('germanblogs')
+        except ValueError:
+            return render(request, 'german/createblog.html', {'form': BlogForm(), 'error': 'Some error in the creation of Blog'})
+
+@login_required
+def deleteblog(request, blog_id):
+    blog = get_object_or_404(Blog, pk=blog_id)
+    if request.method == "POST":
+        blog.delete()
+        return redirect('germanblogs')
+
+@login_required
+def editblog(request, blog_id):
+    blog = get_object_or_404(Blog, pk=blog_id)
+    return render(request, 'german/editblog.html', {'blog':blog})
+
+def loginpage(request):
+    if request.method == "GET":
+        return render(request, 'german/loginpage.html', {'form': AuthenticationForm()})
+
+    else:
+        user = authenticate(request, username = request.POST["username"], password = request.POST["password"])
+        if user is None:
+            return render(request, 'german/loginpage.html', {'form': AuthenticationForm()}, {'error': 'username and password did not match!'})
+        else:
+            login(request, user)
+            return redirect('home')
+
+@login_required
+def logoutuser(request):
+    if request.method == "POST":
+        logout(request)
+        return redirect('home')
 
 class word():
     name = ''
