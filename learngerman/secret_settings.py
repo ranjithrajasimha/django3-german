@@ -1,1 +1,1 @@
-SEC_PSWD = '+!93ox^9u$z3&0pbpqqk3bm'
+SECRET_KEY = '+!93ox^9u$z3&0pbpqqk3bm'
