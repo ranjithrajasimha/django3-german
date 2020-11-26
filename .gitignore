@@ -3,4 +3,5 @@
 *.pyc
 __pycache__/
 secret_settings.py
+local_settings.py
 /static/

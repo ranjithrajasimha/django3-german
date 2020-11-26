@@ -123,3 +123,8 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'static'
 
 LOGIN_URL = '/login'
+
+try:
+    from .local_settings import *
+except ImportError:
+    print('looks like no local settings, you must be in production')
