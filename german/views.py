@@ -5,8 +5,10 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from .models import Blog
 from .forms import BlogForm
+from pathlib import Path
 
-txt_path = '/home/qxw8310/ranjith/udemy/web_development/learngerman-project/german/static/german/dictionary.txt'
+path = Path(__file__).parent.absolute()
+txt_path = str(path) +'/static/german/dictionary.txt'
 qstns_cnt = 0
 ans_cnt = 0
 # Create your views here.
@@ -20,7 +22,7 @@ def dictionary(request):
     #     nouns = []
     #     for line in content:
     #         nouns.append(line.strip().split(' ')[1:])
-    #     # content = [x.strip() for x in content] 
+    #     # content = [x.strip() for x in content]
     nouns = readtxt(txt_path)
     return render(request, 'german/dictionary.html', {'nouns':nouns})
 
@@ -57,7 +59,7 @@ def wordquiz(request):
     q_noun = four_nouns[0]
     random.shuffle(four_nouns)
     if request.method == "GET":
-        return render(request, 'german/wordquiz.html', {'noun1':four_nouns[0], 'noun2':four_nouns[1], 'noun3':four_nouns[2], 'noun4':four_nouns[3], 'qnoun':q_noun})   
+        return render(request, 'german/wordquiz.html', {'noun1':four_nouns[0], 'noun2':four_nouns[1], 'noun3':four_nouns[2], 'noun4':four_nouns[3], 'qnoun':q_noun})
     else:
         qstn = request.POST['qstn']
         ans = request.POST['ans']
@@ -115,7 +117,15 @@ def deleteblog(request, blog_id):
 @login_required
 def editblog(request, blog_id):
     blog = get_object_or_404(Blog, pk=blog_id)
-    return render(request, 'german/editblog.html', {'blog':blog})
+    if request.method == "GET":
+        return render(request, 'german/editblog.html', {'blog':blog})
+    else:
+        try:
+            form = BlogForm(request.POST, instance=blog)
+            form.save()
+            return redirect('germanblogs')
+        except ValueError:
+            return render(request, 'german/editblog.html', {'blog':blog, 'error':'Something is wrong! please check again'})
 
 def loginpage(request):
     if request.method == "GET":

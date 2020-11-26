@@ -8,7 +8,11 @@
 
 <h6 style="font-size: larger;font-family: Georgia, 'Times New Roman', Times, serif;">{{ blog.description|safe }}</h6>
 <br>
-<a role="button" href="{% url 'germanblogs' %}" class="btn" style="background-color: rgb(211, 121, 121);">Back</a>
-<a role="button" href="{% url 'editblog' blog.id %}" class="btn" style="background-color: rgb(211, 121, 121);">Edit</a>
-
+<a role="button" href="{% url 'germanblogs' %}" class="btn" style="background-color: green;color: white;">Back</a>
+<a role="button" href="{% url 'editblog' blog.id %}" class="btn btn-primary">Edit</a>
+<button type="button" class="btn btn-danger" onclick="$('#delete').click()">Delete</button>
+<form style='display: none;' method="POST" action="{% url 'deleteblog' blog.id %}">
+    {% csrf_token %}
+    <button id="delete" type="submit">Delete</button>
+</form>
 {% endblock %}
