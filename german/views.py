@@ -91,7 +91,24 @@ def germanblogs(request):
 
 def detailblog(request, blog_id):
     blog = get_object_or_404(Blog, pk=blog_id)
-    return render(request, 'german/detailblog.html', {'blog':blog})
+    if request.method == "GET":
+        comments = []
+        if blog.comments is not None:
+            comments = blog.comments.split('$')
+        return render(request, 'german/detailblog.html', {'blog':blog, 'comments':comments})
+        
+    else:
+        if blog.comments is not None:
+            blog.comments = request.POST["prev_comments"] + str(request.user) + ": " + request.POST["comment"] + "$"
+        else:
+            blog.comments = str(request.user) + ": " + request.POST["comment"] + "$"
+        comments = blog.comments.split('$')
+
+        try:
+            blog.save()
+            return render(request, 'german/detailblog.html', {'blog':blog, 'comments':comments})
+        except ValueError:
+            return render(request, 'german/detailblog.html', {'blog':blog, 'comments':comments, 'error': 'error! please add comment again'})
 
 @login_required
 def createblog(request):
@@ -110,9 +127,8 @@ def createblog(request):
 @login_required
 def deleteblog(request, blog_id):
     blog = get_object_or_404(Blog, pk=blog_id)
-    if request.method == "POST":
-        blog.delete()
-        return redirect('germanblogs')
+    blog.delete()
+    return redirect('germanblogs')
 
 @login_required
 def editblog(request, blog_id):

@@ -10,6 +10,7 @@ class Blog(models.Model):
     PERSON_CHOICES = (('Ranjith', 'Ranjith'), ('Rinee', 'Rinee'))
     # topic = models.CharField(max_length=32, choices=TYPE_CHOICES)
     created_by = models.CharField(max_length=32, choices=PERSON_CHOICES)
+    comments = models.TextField(blank=True)
     # user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
