@@ -3,6 +3,7 @@
 {% block content %}
 
 <head>
+    <title>Edit</title>
     <div class="row justify-content-center mt-5">
         <div class="col-md-5">
             <h2>Edit Blog</h2>
@@ -22,7 +23,7 @@
                     <input type="text" name="title" class="form-control" id="title" value="{{ blog.title }}">
                 </div>
                 <div class="form-group">
-                    <label for="description">Description</label>
+                    <label for="description">Description (ä ö ü ß)</label>
                     <textarea name="description" rows="6" class="form-control" id="description">{{ blog.description }}</textarea>
                 </div>
                 <div class="form-group">
