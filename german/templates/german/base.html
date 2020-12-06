@@ -14,7 +14,14 @@
 
   <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
 
-  <link rel="icon" type="image/jpg" href="{% static "german/Logo.jpg" %}">
+  <!-- <link rel="icon" type="image/jpg" href="{% static "german/Logo.jpg" %}"> -->
+  {% if user.username == "ranjithrajasimha" %}
+  <link rel="icon" type="image/jpeg" href="{% static 'german/ranjith.jpeg' %}">
+  {% elif user.username == "rinee" %}
+  <link rel="icon" type="image/jpeg" href="{% static 'german/rinee-shirke.jpeg' %}">
+  {% else %}
+  <link rel="icon" type="image/jpg" href="{% static 'german/Logo.jpg' %}">
+  {% endif %}
 
   <!-- <title>German</title> -->
 </head>
@@ -35,7 +42,7 @@
           <li class="nav-item">
             <div class="dropdown">
               <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" style="background-color: indianred;color: black;">
-                Blogs
+                Beschreibungen
               </button>
               <div class="dropdown-menu">
                 <a class="dropdown-item" href="{% url 'germanblogs' %}" target="_self" style="font-size: smaller;">View</a>
@@ -47,7 +54,7 @@
             </div>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'dictionary' %}" target="_self" style="font-size: medium;">Dictionary</a>
+            <a class="nav-link" href="{% url 'dictionary' %}" target="_self" style="font-size: medium;">Wörterbuch</a>
           </li>
           <li class="nav-item">
             <div class="dropdown">
