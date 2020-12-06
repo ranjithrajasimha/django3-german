@@ -6,6 +6,7 @@ from django.contrib.auth import login, logout, authenticate
 from .models import Blog
 from .forms import BlogForm
 from pathlib import Path
+from .utils.utils import csv_modifier
 
 path = Path(__file__).parent.absolute()
 txt_path = str(path) +'/static/german/dictionary.txt'
@@ -16,14 +17,8 @@ def home(request):
     return render(request, 'german/home.html')
 
 def dictionary(request):
-    # with open(txt_path) as f:
-    #     content = f.readlines()
-    #     # you may also want to remove whitespace characters like `\n` at the end of each line
-    #     nouns = []
-    #     for line in content:
-    #         nouns.append(line.strip().split(' ')[1:])
-    #     # content = [x.strip() for x in content]
-    nouns = readtxt(txt_path)
+    # nouns = readtxt(txt_path)
+    nouns = readcsv()
     return render(request, 'german/dictionary.html', {'nouns':nouns})
 
 
@@ -33,12 +28,12 @@ def artikelquiz(request):
     if request.method == "GET":
         qstns_cnt = 0
         ans_cnt = 0
-        nouns = readtxt(txt_path)
+        nouns = readcsv()
         noun = random.choice(nouns)
         return render(request, 'german/artikelquiz.html', {'noun':noun, 'score': f'{ans_cnt}/{qstns_cnt}'})
     else:
         qstns_cnt += 1
-        nouns = readtxt(txt_path)
+        nouns = readcsv()
         noun = random.choice(nouns)
         artikel = request.POST['answer']
         name = request.POST['nounname']
@@ -52,7 +47,7 @@ def artikelquiz(request):
 
 
 def wordquiz(request):
-    all_nouns = readtxt(txt_path)
+    all_nouns = readcsv()
     four_nouns = []
     for _ in range(4):
         four_nouns.append(random.choice(all_nouns))
@@ -68,22 +63,32 @@ def wordquiz(request):
         else:
             return render(request, 'german/wordquiz.html', {'result': f'wrong! {qstn} : {ans}' , 'noun1':four_nouns[0], 'noun2':four_nouns[1], 'noun3':four_nouns[2], 'noun4':four_nouns[3], 'qnoun':q_noun})
 
-
-
-def readtxt(path):
-    with open(path) as f:
-        content = f.readlines()
-        # you may also want to remove whitespace characters like `\n` at the end of each line
-        nouns = []
-        for line in content:
-            line = line.strip().split(' ')[1:]
-            # print(line)
-            w = word()
-            w.name = line[3].lower()
-            w.meaning = line[0].lower()
-            w.artikel = line[2].lower()
-            nouns.append(w)
+def readcsv():
+    csv_obj = csv_modifier()
+    nouns = []
+    rows = csv_obj.read_csv()
+    for row in rows:
+        w = word()
+        w.artikel = row[0]
+        w.name = row[1]
+        w.meaning = row[2]
+        nouns.append(w)
     return nouns
+
+# def readtxt(path):
+#     with open(path) as f:
+#         content = f.readlines()
+#         # you may also want to remove whitespace characters like `\n` at the end of each line
+#         nouns = []
+#         for line in content:
+#             line = line.strip().split(' ')[1:]
+#             # print(line)
+#             w = word()
+#             w.name = line[3].lower()
+#             w.meaning = line[0].lower()
+#             w.artikel = line[2].lower()
+#             nouns.append(w)
+#     return nouns
 
 def germanblogs(request):
     blogs = Blog.objects.order_by('-date')
